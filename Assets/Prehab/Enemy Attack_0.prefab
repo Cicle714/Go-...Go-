@@ -102,6 +102,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3734684fc578b274eb7d5aafe4bcc6a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DeadCount: 10
   NockBackPow: 5
 --- !u!50 &3831100981485618808
 Rigidbody2D:

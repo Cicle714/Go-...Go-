@@ -7,8 +7,9 @@ public class Enemy01 : EnemyStatus
 
     [SerializeField]
     private float AttackInterval; //攻撃の間隔
+    private float AttackInterval2; //攻撃の間隔
     private float AttackCount; //攻撃のカウント
-
+    private float AttackCount2; //攻撃のカウント
 
     [SerializeField]
     private GameObject Bullet; //弾
@@ -23,6 +24,7 @@ public class Enemy01 : EnemyStatus
         sR = GetComponent<SpriteRenderer>();
 
         AttackCount = AttackInterval; //攻撃のカウント初期化
+        AttackCount2 = AttackInterval2; //攻撃のカウント初期化
     }
 
 
@@ -32,15 +34,17 @@ public class Enemy01 : EnemyStatus
         if (AttackCount < 0)
         {
             AttackCount = AttackInterval; //攻撃のカウント初期化
-            GameObject clone = Instantiate(Bullet,BulletPos.transform.position, Quaternion.identity); //弾発射
+            GameObject clone = Instantiate(Bullet, BulletPos.transform.position, Quaternion.identity); //弾発射
             EnemyBullet cloneBullet = clone.GetComponent<EnemyBullet>();
             cloneBullet.type = EnemyBullet.BulletType.Normal;
-            if(!sR.flipX)
-            cloneBullet.bulletSpeed = BulletSpeed;
+            if (!sR.flipX)
+                cloneBullet.bulletSpeed = BulletSpeed;
             else
-            cloneBullet.bulletSpeed = -BulletSpeed;
+                cloneBullet.bulletSpeed = -BulletSpeed;
             cloneBullet.attackPow = AttackPow;
         }
         AttackCount -= Time.deltaTime; //カウントダウン
+
+
     }
 }

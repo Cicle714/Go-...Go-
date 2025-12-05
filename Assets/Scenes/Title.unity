@@ -131,6 +131,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TitleManager
       objectReference: {fileID: 0}
+    - target: {fileID: 3443260035810905051, guid: 3adb20fa23b3bfe4485d0ef5d73c4641, type: 3}
+      propertyPath: m_Text
+      value: Push to Enter!!
+      objectReference: {fileID: 0}
     - target: {fileID: 4797445723139073521, guid: 3adb20fa23b3bfe4485d0ef5d73c4641, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1389.3402
@@ -170,6 +174,14 @@ PrefabInstance:
     - target: {fileID: 4797445723139073521, guid: 3adb20fa23b3bfe4485d0ef5d73c4641, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6576234042520481199, guid: 3adb20fa23b3bfe4485d0ef5d73c4641, type: 3}
+      propertyPath: m_Text
+      value: Go!GO!!Cat!!!
+      objectReference: {fileID: 0}
+    - target: {fileID: 6576234042520481199, guid: 3adb20fa23b3bfe4485d0ef5d73c4641, type: 3}
+      propertyPath: m_FontData.m_FontSize
+      value: 251
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

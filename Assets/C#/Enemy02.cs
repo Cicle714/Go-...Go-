@@ -35,13 +35,13 @@ public class Enemy02 : EnemyStatus
         if (AttackCount < 0)
         {
             AttackCount = AttackInterval; //攻撃のカウント初期化
-            GameObject clone = Instantiate(Bullet,BulletPos.transform.position, Quaternion.identity); //弾発射
+            GameObject clone = Instantiate(Bullet, BulletPos.transform.position, Quaternion.identity); //弾発射
             EnemyBullet cloneBullet = clone.GetComponent<EnemyBullet>();
             cloneBullet.type = EnemyBullet.BulletType.Physics;
-            if(!sR.flipX)
-            cloneBullet.bulletVector = BulletVector;
+            if (!sR.flipX)
+                cloneBullet.bulletVector = BulletVector;
             else
-            cloneBullet.bulletVector = new Vector2(-BulletVector.x, BulletVector.y);
+                cloneBullet.bulletVector = new Vector2(-BulletVector.x, BulletVector.y);
             cloneBullet.attackPow = AttackPow;
         }
         AttackCount -= Time.deltaTime; //カウントダウン

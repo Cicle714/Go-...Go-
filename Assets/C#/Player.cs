@@ -28,15 +28,6 @@ public class Player : MonoBehaviour
 
     private bool Hit; //攻撃をくらったか
     private bool knockback; //ノックバック中か
-    private float knockbackCount; //ノックバックのカウント
-    [SerializeField]
-    private float knockbackTime; //ノックバックの時間
-    [SerializeField]
-    private float InvisibleTime; //点滅時間
-    private float InvisibleCount; //点滅時間のカウント
-    [SerializeField]
-    private float InvisibleInterval; //点滅の間隔
-    private float InvisibleIntervalCount; //点滅のカウント
 
     [SerializeField]
     private GameObject DeadObject; //死んだときにでるオブジェクト
@@ -65,14 +56,12 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        PlayerHit();
-        if (knockback)
+        if (knockback) //ノックバック中は操作を受け付けない
         {
             return;
         }
         PlayerMove(); //移動
         PlayerAir(); //空中
-        PlayerAttack(); //攻撃
     }
 
 
@@ -112,9 +101,10 @@ public class Player : MonoBehaviour
 
     void PlayerAir()
     {
+        //地面についているかでコライダーの位置を変える
         if (IsGround)
         {
-            col.offset = new Vector2(offsetX,offsetY);
+            col.offset = new Vector2(offsetX, offsetY);
         }
         else
         {
@@ -142,31 +132,6 @@ public class Player : MonoBehaviour
         anim.SetBool("Fall", Fall);
     }
 
-    private void PlayerAttack()
-    {
-        if (GetKeyDownK())
-        {
-            if (IsGround && !anim.GetBool("Move"))
-            {
-                anim.Play("Attack");
-            }
-            else if (IsGround && anim.GetBool("Move"))
-            {
-                anim.Play("MoveAttack");
-            }
-            else if (!IsGround && !Fall)
-            {
-                anim.Play("JumpAttack");
-            }
-            else if (!IsGround && Fall)
-            {
-                anim.Play("FallAttack");
-            }
-        }
-
-        anim.SetBool("IsGround", IsGround);
-
-    }
 
     //地面にいるかの処理
     public void CheckGround(bool landing)
@@ -175,7 +140,7 @@ public class Player : MonoBehaviour
         {
             Fall = false;
             if (!IsGround)
-                anim.Play("Idle");
+                anim.Play("Idle"); //地面についたら強制的にIdleにする
             IsGround = true;
         }
         else
@@ -189,62 +154,25 @@ public class Player : MonoBehaviour
     {
         if (!Hit)
         {
-            Hp -= damage;
+            Hp -= damage; //Hpを減らす処理
+            knockback = true; //ノックバックしている
             if (Hp <= 0)
             {
-                StartCoroutine(PlayerDead());
+                StartCoroutine(PlayerDead()); //プレイヤー死にました
                 return;
             }
-            Hit = true;
-            rb.linearVelocity = Nockback;
-            knockback = true;
-            knockbackCount = knockbackTime;
-            InvisibleIntervalCount = InvisibleInterval;
-            InvisibleCount = InvisibleTime;
-            anim.Play("Hit");
         }
     }
 
 
-    void PlayerHit()
-    {
-        if (Hit)
-        {
-            if (knockbackCount > 0)
-            {
-                knockbackCount -= Time.deltaTime; //ノックバックのカウント
-                return;
-            }
-            if (knockback)
-            {
-                knockback = false; //ノックバック終わり
-                anim.Play("Idle"); //アニメーションをアイドル
-            }
-            if (InvisibleIntervalCount < 0)
-            {
-                InvisibleIntervalCount = InvisibleInterval; //点滅のカウントのリセット
-                //点滅処理
-                if (sR.color.a != 0)
-                    sR.color = new Color(sR.color.r, sR.color.g, sR.color.b, 0);
-                else
-                    sR.color = new Color(sR.color.r, sR.color.g, sR.color.b, 1);
-            }
-            else
-                InvisibleIntervalCount -= Time.deltaTime; //点滅のカウント
 
-            InvisibleCount -= Time.deltaTime; //点滅時間のカウント
-
-            if (InvisibleCount < 0)
-            {
-                //点滅終わり
-                Hit = false;
-                sR.color = new Color(sR.color.r, sR.color.g, sR.color.b, 1);
-            }
-        }
-    }
-
+    /// <summary>
+    /// プレイヤーが死んだときの処理
+    /// </summary>
+    /// <returns></returns>
     IEnumerator PlayerDead()
     {
+        //死んだときの演出
         anim.Play("Hit");
         Time.timeScale = 0;
         float count = 1;
@@ -254,27 +182,19 @@ public class Player : MonoBehaviour
             yield return null;
         }
         Time.timeScale = 1;
-        gameObject.SetActive(false);
         Instantiate(DeadObject, gameObject.transform.position, Quaternion.identity);
         Instantiate(DeadEffect, gameObject.transform.position, Quaternion.identity);
-        yield return new WaitForSeconds(2.0f);
+
+        FindObjectOfType<UI>().StartCoroutine(FindObjectOfType<UI>().BlackOut2());
+
+        gameObject.SetActive(false); ;
 
     }
 
-    bool GetKeyW()
-    {
-        if (Input.GetKey(KeyCode.W))
-            return true;
-        return false;
-    }
+    //操作関係
     bool GetKeyA()
     {
         if (Input.GetKey(KeyCode.A)) return true;
-        return false;
-    }
-    bool GetKeyS()
-    {
-        if (Input.GetKey(KeyCode.S)) return true;
         return false;
     }
     bool GetKeyD()
@@ -283,14 +203,6 @@ public class Player : MonoBehaviour
             return true;
         return false;
     }
-
-    bool GetKeyDownK()
-    {
-        if (Input.GetKeyDown(KeyCode.K)) return true;
-        return false;
-    }
-
-
     bool GetKeyShift()
     {
         if (Input.GetKey(KeyCode.RightShift) || Input.GetKey(KeyCode.LeftShift)) return true;
